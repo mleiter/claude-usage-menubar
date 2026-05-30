@@ -12,8 +12,10 @@ final class UsageStore: ObservableObject {
     private let tokenProvider = KeychainTokenProvider()
     private var timer: Timer?
     private let interval: TimeInterval = 60
+    private var isFetching = false
 
     func start() {
+        timer?.invalidate()
         refresh()
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.refresh() }
@@ -21,10 +23,18 @@ final class UsageStore: ObservableObject {
     }
 
     func refresh() {
-        Task { @MainActor in
+        guard !isFetching else { return }
+        isFetching = true
+        let provider = tokenProvider
+        let client = client
+        Task {
+            defer { Task { @MainActor in self.isFetching = false } }
             do {
-                let token = try tokenProvider.currentToken()
-                let usage = try await client.fetch(token: token)
+                // Run the blocking security subprocess and network fetch off the main actor.
+                let usage = try await Task.detached(priority: .userInitiated) {
+                    let token = try provider.currentToken()
+                    return try await client.fetch(token: token)
+                }.value
                 self.usage = usage
                 self.lastUpdated = Date()
                 self.lastError = nil

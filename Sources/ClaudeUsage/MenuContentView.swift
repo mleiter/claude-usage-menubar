@@ -47,10 +47,14 @@ struct MenuContentView: View {
 
     private func percent(_ value: Double) -> String { "\(Int(value.rounded()))%" }
 
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm:ss"
+        return f
+    }()
+
     private func timeString(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        return formatter.string(from: date)
+        Self.timeFormatter.string(from: date)
     }
 
     private var errorMessage: String {
