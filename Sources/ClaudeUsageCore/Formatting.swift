@@ -22,3 +22,15 @@ public func usageBar(_ utilization: Double, segments: Int = 10) -> String {
     return String(repeating: "▓", count: filled)
          + String(repeating: "░", count: segments - filled)
 }
+
+public func formatReset(
+    _ date: Date,
+    timeZone: TimeZone = .current,
+    locale: Locale = Locale(identifier: "de_DE")
+) -> String {
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.timeZone = timeZone
+    formatter.dateFormat = "EE HH:mm"
+    return formatter.string(from: date)
+}
