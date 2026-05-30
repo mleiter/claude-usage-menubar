@@ -23,3 +23,12 @@ public struct Usage: Decodable, Equatable {
     public let sevenDaySonnet: Window?
     public let extraUsage: ExtraUsage?
 }
+
+public enum UsageError: Error, Equatable {
+    case noToken
+    case keychainDenied
+    case tokenExpired
+    case rateLimited
+    case network(String)
+    case decoding
+}
