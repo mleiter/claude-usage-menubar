@@ -4,7 +4,7 @@ public enum ClaudeUsageCore {
     public static let endpoint = URL(string: "https://api.anthropic.com/api/oauth/usage")!
 }
 
-public struct Window: Decodable, Equatable {
+public struct UsageWindow: Decodable, Equatable {
     public let utilization: Double
     public let resetsAt: Date?
 }
@@ -17,10 +17,10 @@ public struct ExtraUsage: Decodable, Equatable {
 }
 
 public struct Usage: Decodable, Equatable {
-    public let fiveHour: Window
-    public let sevenDay: Window
-    public let sevenDayOpus: Window?
-    public let sevenDaySonnet: Window?
+    public let fiveHour: UsageWindow
+    public let sevenDay: UsageWindow
+    public let sevenDayOpus: UsageWindow?
+    public let sevenDaySonnet: UsageWindow?
     public let extraUsage: ExtraUsage?
 }
 

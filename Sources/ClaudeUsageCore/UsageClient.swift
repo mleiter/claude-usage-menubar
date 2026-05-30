@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UsageClient {
+public struct UsageClient: Sendable {
     private let session: URLSession
     public init(session: URLSession = .shared) { self.session = session }
 

@@ -40,7 +40,7 @@ struct MenuContentView: View {
             .keyboardShortcut("q")
     }
 
-    private func windowRow(_ label: String, _ window: Window) -> some View {
+    private func windowRow(_ label: String, _ window: UsageWindow) -> some View {
         let reset = window.resetsAt.map { " (Reset \(formatReset($0)))" } ?? ""
         return Text("\(label)  \(percent(window.utilization))  \(usageBar(window.utilization))\(reset)")
     }
