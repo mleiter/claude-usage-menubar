@@ -4,3 +4,5 @@ build/
 DerivedData/
 .build/
 ClaudeUsage.app/
+ClaudeUsage.zip
+*.dSYM/

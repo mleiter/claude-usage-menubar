@@ -18,6 +18,28 @@ OAuth-Token aus dem macOS-Keychain (`Claude Code-credentials`, von Claude Code g
 open ClaudeUsage.app
 ```
 
+`package.sh` baut ein **universal** Binary (Apple Silicon + Intel), signiert das
+Bundle ad-hoc und legt zusätzlich `ClaudeUsage.zip` zum Verteilen an.
+
+## Auf einem anderen Mac installieren
+
+1. `ClaudeUsage.zip` auf den Ziel-Mac kopieren (AirDrop, USB, Cloud …) und entpacken.
+2. `ClaudeUsage.app` nach `/Applications` ziehen (optional, aber üblich).
+3. Da die App nicht über einen Apple-Developer-Account notarisiert ist, blockt
+   Gatekeeper sie zunächst. Einmalig die Quarantäne entfernen:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/ClaudeUsage.app
+   ```
+   (Alternativ beim ersten Start Rechtsklick auf die App → „Öffnen" → „Öffnen".)
+4. App starten. Beim ersten Keychain-Zugriff „Immer erlauben" wählen.
+
+**Voraussetzungen auf dem Ziel-Mac:** macOS 13+ und ein installiertes, eingeloggtes
+Claude Code (liefert das Keychain-Token). Ohne Claude-Login zeigt die App
+„Kein Claude-Login gefunden" — siehe Abschnitt unten.
+
+> Für eine Verteilung ohne den `xattr`-Schritt bräuchtest du einen
+> Apple Developer Account (99 $/Jahr) zum Signieren mit Developer ID + Notarisierung.
+
 ## Tests
 
 ```bash
