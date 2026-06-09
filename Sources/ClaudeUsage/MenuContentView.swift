@@ -10,14 +10,8 @@ struct MenuContentView: View {
         if let usage = store.usage {
             windowRow("5-Stunden-Limit", usage.fiveHour)
             windowRow("Woche (7 Tage)", usage.sevenDay)
-            if let opus = usage.sevenDayOpus {
-                Text("  └ Opus  \(percent(opus.utilization))")
-            } else {
-                Text("  └ Opus  –")
-            }
-            if let sonnet = usage.sevenDaySonnet {
-                Text("  └ Sonnet  \(percent(sonnet.utilization))")
-            }
+            modelRow("Opus", usage.sevenDayOpus)
+            modelRow("Sonnet", usage.sevenDaySonnet)
             if let extra = usage.extraUsage, extra.isEnabled {
                 Divider()
                 Text("Extra-Budget  \(Int(extra.usedCredits)) / \(Int(extra.monthlyLimit)) \(extra.currency)")
@@ -27,7 +21,7 @@ struct MenuContentView: View {
                 Text("Zuletzt aktualisiert  \(timeString(updated))")
             }
         } else {
-            Text(errorMessage)
+            Text(statusMessage(for: store.lastError))
         }
 
         Divider()
@@ -42,10 +36,12 @@ struct MenuContentView: View {
 
     private func windowRow(_ label: String, _ window: UsageWindow) -> some View {
         let reset = window.resetsAt.map { " (Reset \(formatReset($0)))" } ?? ""
-        return Text("\(label)  \(percent(window.utilization))  \(usageBar(window.utilization))\(reset)")
+        return Text("\(label)  \(formatPercent(window.utilization))  \(usageBar(window.utilization))\(reset)")
     }
 
-    private func percent(_ value: Double) -> String { "\(Int(value.rounded()))%" }
+    private func modelRow(_ label: String, _ window: UsageWindow?) -> Text {
+        Text("  └ \(label)  \(window.map { formatPercent($0.utilization) } ?? "–")")
+    }
 
     private static let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -55,14 +51,5 @@ struct MenuContentView: View {
 
     private func timeString(_ date: Date) -> String {
         Self.timeFormatter.string(from: date)
-    }
-
-    private var errorMessage: String {
-        switch store.lastError {
-        case .noToken:        return "Kein Claude-Login gefunden"
-        case .keychainDenied: return "Keychain-Zugriff verweigert"
-        case .tokenExpired:   return "In Claude Code neu einloggen"
-        default:              return "Lade …"
-        }
     }
 }

@@ -26,6 +26,14 @@ private let sampleJSON = """
     #expect(usage.fiveHour.resetsAt != nil)
 }
 
+@Test func parsesNonFractionalResetDate() throws {
+    let json = #"{"five_hour": {"utilization": 5.0, "resets_at": "2026-05-30T19:10:00+00:00"},"#
+        + #""seven_day": {"utilization": 3.0, "resets_at": null}}"#
+    let usage = try JSONDecoder.usageDecoder().decode(Usage.self, from: json.data(using: .utf8)!)
+    let expected = ISO8601DateFormatter().date(from: "2026-05-30T19:10:00Z")!
+    #expect(abs(usage.fiveHour.resetsAt!.timeIntervalSince(expected)) < 1.0)
+}
+
 @Test func parsesFractionalResetDate() throws {
     let usage = try JSONDecoder.usageDecoder().decode(Usage.self, from: sampleJSON)
     // 2026-05-30T19:10:00Z == 1780site... assert via interval, tz-unabhängig

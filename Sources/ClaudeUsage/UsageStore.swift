@@ -15,7 +15,9 @@ final class UsageStore: ObservableObject {
     private var isFetching = false
 
     func start() {
-        timer?.invalidate()
+        // Idempotent: onAppear des MenuBarExtra-Labels kann mehrfach feuern
+        // (z. B. nach Display-Wechsel) und darf den Poll-Zyklus nicht neu starten.
+        guard timer == nil else { return }
         refresh()
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.refresh() }
@@ -27,8 +29,9 @@ final class UsageStore: ObservableObject {
         isFetching = true
         let provider = tokenProvider
         let client = client
+        // Task {} erbt hier die MainActor-Isolation von refresh().
         Task {
-            defer { Task { @MainActor in self.isFetching = false } }
+            defer { isFetching = false }
             do {
                 // Run the blocking security subprocess and network fetch off the main actor.
                 let usage = try await Task.detached(priority: .userInitiated) {
