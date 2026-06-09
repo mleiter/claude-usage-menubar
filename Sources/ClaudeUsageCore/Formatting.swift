@@ -1,7 +1,11 @@
 import Foundation
 
-public enum UsageLevel: Equatable {
-    case normal, warning, critical
+public enum UsageLevel: Int, Equatable, Comparable, Sendable {
+    case normal = 0, warning, critical
+
+    public static func < (lhs: UsageLevel, rhs: UsageLevel) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
 }
 
 public func usageLevel(_ maxUtilization: Double) -> UsageLevel {

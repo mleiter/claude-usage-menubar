@@ -1,5 +1,7 @@
 # Claude Usage Menu Bar
 
+[![CI](https://github.com/mleiter/claude-usage-menubar/actions/workflows/ci.yml/badge.svg)](https://github.com/mleiter/claude-usage-menubar/actions/workflows/ci.yml)
+
 Schlanke macOS-Menüleisten-App, die den Claude-Plan-Verbrauch live anzeigt
 (`5h X% · 7d Y%`). Datenquelle: `GET https://api.anthropic.com/api/oauth/usage`,
 OAuth-Token aus dem macOS-Keychain (`Claude Code-credentials`, von Claude Code gepflegt).
@@ -58,13 +60,19 @@ swift test
   Ab ≥80 % orange, ≥95 % rot.
 - **Klick-Menü:** beide Limits mit Balken und Reset-Zeit (lokale Zeit), separate
   Opus-/Sonnet-Wochenwerte, Extra-Budget (falls aktiviert), Zeitpunkt der letzten
-  Aktualisierung, „Jetzt aktualisieren" (⌘R), „Beim Login starten", „Beenden" (⌘Q).
+  Aktualisierung, „Jetzt aktualisieren" (⌘R), „Beim Login starten",
+  „Benachrichtigungen", „Beenden" (⌘Q).
+- **Benachrichtigungen:** einmalige macOS-Mitteilung, wenn ein Limit die
+  80 %- bzw. 95 %-Schwelle überschreitet (im Menü abschaltbar).
 
 ## Hinweise
 
 - Benötigt macOS 13+ und ein eingeloggtes Claude Code (für den Keychain-Token).
 - Beim ersten Start fragt macOS ggf. einmalig nach Keychain-Zugriff → „Immer erlauben".
-- Poll-Intervall: 60 s. Bei Rate-Limit (429) bleibt der zuletzt bekannte Wert sichtbar.
+- Poll-Intervall: 60 s; bei Fehlern (Netz weg, Rate-Limit) exponentielles
+  Backoff bis max. 10 min. Nach dem Ruhezustand wird sofort aktualisiert.
+- Bei Fehlern bleibt der zuletzt bekannte Wert sichtbar und wird im Menü
+  als veraltet gekennzeichnet.
 - Kein Dock-Icon (`LSUIElement`); die App lebt nur in der Menüleiste.
 
 ## Credentials auf einem anderen Mac
