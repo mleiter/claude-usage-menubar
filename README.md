@@ -11,6 +11,12 @@ OAuth-Token aus dem macOS-Keychain (`Claude Code-credentials`, von Claude Code g
 > aufhören kann zu funktionieren. Es werden keine Zugangsdaten gespeichert oder
 > übertragen — der Token wird ausschließlich lokal zur Laufzeit gelesen.
 
+## Download
+
+Fertige App unter [Releases](https://github.com/mleiter/claude-usage-menubar/releases):
+`ClaudeUsage.zip` herunterladen und der Anleitung unter
+[„Auf einem anderen Mac installieren"](#auf-einem-anderen-mac-installieren) folgen.
+
 ## Bauen
 
 ```bash
