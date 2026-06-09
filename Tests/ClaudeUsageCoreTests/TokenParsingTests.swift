@@ -15,3 +15,10 @@ import Testing
         try KeychainTokenProvider.parseToken(from: data)
     }
 }
+
+@Test func mapsSecurityExitCodesToDistinctErrors() {
+    #expect(KeychainTokenProvider.error(forExitCode: 44) == .noToken)         // errSecItemNotFound
+    #expect(KeychainTokenProvider.error(forExitCode: 51) == .keychainDenied)  // errSecAuthFailed
+    #expect(KeychainTokenProvider.error(forExitCode: 128) == .keychainDenied) // vom Nutzer abgebrochen
+    #expect(KeychainTokenProvider.error(forExitCode: 1) == .noToken)
+}

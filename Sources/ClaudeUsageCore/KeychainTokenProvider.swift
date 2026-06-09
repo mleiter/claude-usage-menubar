@@ -18,6 +18,15 @@ public struct KeychainTokenProvider {
         return creds.claudeAiOauth.accessToken
     }
 
+    /// Mappt Exit-Codes des `security`-CLI: 44 = Item nicht gefunden,
+    /// 51 = Zugriff verweigert (errSecAuthFailed), 128 = Dialog abgebrochen.
+    public static func error(forExitCode code: Int32) -> UsageError {
+        switch code {
+        case 51, 128: return .keychainDenied
+        default:      return .noToken
+        }
+    }
+
     /// Liest den Token via `security`-CLI aus dem Login-Keychain.
     public func currentToken() throws -> String {
         let process = Process()
@@ -31,11 +40,15 @@ public struct KeychainTokenProvider {
         } catch {
             throw UsageError.keychainDenied
         }
+        // Blockiert bewusst diesen einen Thread (beim Erstlauf bis der Nutzer den
+        // Keychain-Dialog beantwortet): refresh() läuft dank isFetching-Guard nie
+        // parallel, der Main-Actor ist nicht betroffen.
         process.waitUntilExit()
         let data = stdout.fileHandleForReading.readDataToEndOfFile()
-        guard process.terminationStatus == 0, !data.isEmpty else {
-            throw UsageError.noToken
+        guard process.terminationStatus == 0 else {
+            throw Self.error(forExitCode: process.terminationStatus)
         }
+        guard !data.isEmpty else { throw UsageError.noToken }
         return try Self.parseToken(from: data)
     }
 }
