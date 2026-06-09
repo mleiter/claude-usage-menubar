@@ -20,6 +20,10 @@ struct MenuContentView: View {
             if let updated = store.lastUpdated {
                 Text("Zuletzt aktualisiert  \(timeString(updated))")
             }
+            if store.lastError != nil {
+                // Daten sind noch sichtbar, aber veraltet — ehrlich kennzeichnen.
+                Text("⚠︎ \(statusMessage(for: store.lastError))")
+            }
         } else {
             Text(statusMessage(for: store.lastError))
         }
@@ -29,6 +33,9 @@ struct MenuContentView: View {
             .keyboardShortcut("r")
         Button(launchAtLogin ? "Beim Login starten ✓" : "Beim Login starten") {
             toggleLoginItem()
+        }
+        Button(store.notificationsEnabled ? "Benachrichtigungen ✓" : "Benachrichtigungen") {
+            store.notificationsEnabled.toggle()
         }
         Button("Beenden") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")
