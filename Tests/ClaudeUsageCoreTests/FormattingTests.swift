@@ -26,6 +26,11 @@ import Testing
     #expect(formatTitle(fiveHour: 105, sevenDay: -1) == "5h 100% · 7d 0%")
 }
 
+@Test func versionLabelShowsBundleVersionOrDevFallback() {
+    #expect(versionLabel("1.1.0") == "Version 1.1.0")
+    #expect(versionLabel(nil) == "Version dev")
+}
+
 @Test func statusMessageCoversEveryErrorCase() {
     #expect(statusMessage(for: nil) == "Lade …")
     #expect(statusMessage(for: .noToken) == "Kein Claude-Login gefunden")

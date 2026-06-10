@@ -24,6 +24,11 @@ public func formatTitle(fiveHour: Double, sevenDay: Double) -> String {
     "5h \(formatPercent(fiveHour)) · 7d \(formatPercent(sevenDay))"
 }
 
+/// Versionszeile fürs Menü; ohne Bundle-Version (Dev-Modus via `swift run`) „dev".
+public func versionLabel(_ shortVersion: String?) -> String {
+    "Version \(shortVersion ?? "dev")"
+}
+
 /// Statuszeile im Menü, solange noch keine Daten angezeigt werden können.
 public func statusMessage(for error: UsageError?) -> String {
     switch error {
