@@ -39,6 +39,9 @@ struct MenuContentView: View {
         }
         Button("Beenden") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")
+        Divider()
+        Text(versionLabel(
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String))
     }
 
     private func windowRow(_ label: String, _ window: UsageWindow) -> some View {
