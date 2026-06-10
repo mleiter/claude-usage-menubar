@@ -83,6 +83,12 @@ synchronisiert). Auf einem anderen Mac funktioniert die App also nur, wenn dort
 Claude Code installiert und eingeloggt ist; andernfalls erscheint
 „Kein Claude-Login gefunden".
 
+## Entwicklung
+
+Dieses Projekt wird mit [Claude Code](https://claude.com/claude-code) entwickelt;
+alle Änderungen werden vom Maintainer geprüft und getestet. Die AI-Beteiligung
+ist in der Commit-History per `Co-Authored-By` ausgewiesen.
+
 ## Lizenz
 
 MIT — siehe [LICENSE](LICENSE).
